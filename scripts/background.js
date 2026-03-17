@@ -1,13 +1,23 @@
-chrome.runtime.onMessage.addListener((message) => {
-    if (message.action === "startTimer") {
-        const tabId = message.tabId.toString();
-        const duration = message.duration;
 
-        // Store the timer info in chrome.storage
-        chrome.storage.local.set({ [tabId]: { duration, startTime: Date.now() } }, () => {
-            chrome.storage.local.get(tabId, (data) => {
-                console.log("Timer started for tab", tabId, "with duration", data[tabId].duration);
-            });
-        });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "startTimer") {
+        chrome.tabs.sendMessage(message.tabId, {
+            action: "startTimer",
+            tabId: message.tabId,
+            duration: message.duration
+        })
+    }
+
+    if (message.action === "removeTab") {
+        chrome.tabs.sendMessage(message.tabId, {
+            action: "removeTab",
+            tabId: message.tabId,
+            duration: message.duration
+        })
+    }
+
+    if (message.action === "getTabId") {
+        sendResponse(sender.tab.id);
     }
 });

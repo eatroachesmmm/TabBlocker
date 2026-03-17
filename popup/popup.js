@@ -8,6 +8,7 @@ timeInputs.forEach(input => {
 });
 
 const start_button = document.getElementById("start_button");
+const reset_button = document.getElementById("reset_button");
 const hours_input = document.getElementById("hours_input");
 const minutes_input = document.getElementById("minutes_input");
 const seconds_input = document.getElementById("seconds_input");
@@ -20,6 +21,16 @@ function convertToSeconds(hours, minutes, seconds) {
     return h * 3600 + m * 60 + s;
 }
 
+reset_button.addEventListener("click", () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const matchingTab = tabs[0];
+        chrome.runtime.sendMessage({
+            action: "removeTab",
+            tabId: matchingTab.id,
+        });
+    });
+});
+
 start_button.addEventListener("click", () => {
     const hours = hours_input.value;
     const minutes = minutes_input.value;
@@ -30,14 +41,15 @@ start_button.addEventListener("click", () => {
         return;
     }
 
-    const totalSeconds = convertToSeconds(hours, minutes, seconds);
+    const duration = convertToSeconds(hours, minutes, seconds);
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const activeTab = tabs[0];
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+        const matchingTab = tabs[0];
+
         chrome.runtime.sendMessage({
             action: "startTimer",
-            tabId: activeTab.id,
-            duration: totalSeconds
+            tabId: matchingTab.id,
+            duration: duration
         });
     });
 });
