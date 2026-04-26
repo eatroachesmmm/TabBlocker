@@ -1,0 +1,21 @@
+#tabBlocker_overlay {
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100dvh;
+
+    margin: 0;
+    border: none;
+    padding: 0;
+
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    z-index: 2147483647;
+}

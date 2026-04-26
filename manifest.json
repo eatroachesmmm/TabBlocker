@@ -14,6 +14,9 @@
       "js": [
         "scripts/content.js"
       ],
+      "css": [
+        "css/overlay.css"
+      ],
       "matches": [
         "<all_urls>"
       ]

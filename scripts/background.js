@@ -5,7 +5,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.tabs.sendMessage(message.tabId, {
             action: "startTimer",
             tabId: message.tabId,
-            duration: message.duration
+            duration: message.duration,
+            startTime: message.startTime
         })
     }
 

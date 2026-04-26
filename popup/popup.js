@@ -45,11 +45,13 @@ start_button.addEventListener("click", () => {
 
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         const matchingTab = tabs[0];
+        let startTime = Date.now();
 
         chrome.runtime.sendMessage({
             action: "startTimer",
             tabId: matchingTab.id,
-            duration: duration
+            duration: duration,
+            startTime: startTime
         });
     });
 });
