@@ -11,46 +11,65 @@ chrome.runtime.sendMessage({ action: "getTabId" }, (tabId) => {
 
 function startTimer(startTime, duration, tabId) {
 
-    let currentTime = Date.now();
     let endTime = startTime + duration * 1000;
 
-
-    if (currentTime >= endTime) {
+    if (Date.now() >= endTime) {
         console.log("Timer already finished");
         return;
     }
 
-    let remaining = endTime - currentTime;
-
     let overlay = document.createElement("div");
-    overlay.id = "timer_overlay";
+    overlay.id = "tabBlocker_overlay";
 
     overlay.innerHTML = `
-    <div class="overlay-content">
-        <h2>This tab has been blocked</h2>
-        <h1>Time remaining: ${Math.ceil(remaining / 1000)}s</h1>
-    </div>
-`;
-    overlay.id = "tabBlocker_overlay";
+        <div class="overlay-content">
+            <h2>This tab has been blocked</h2>
+            <h1 id="timer_text"></h1>
+        </div>
+    `;
+
     document.body.appendChild(overlay);
 
-    setTimeout(() => {
-        //remove
-        document.body.removeChild(document.querySelector("#tabBlocker_overlay"));
-        chrome.storage.local.remove(tabId.toString());
-        console.log("REMOVED TAB " + tabId + " FROM MEMORY");
-    }, remaining);
+    const timerText = document.getElementById("timer_text");
+
+    function updateTimer() {
+        let remaining = endTime - Date.now();
+
+        if (remaining <= 0) {
+            clearInterval(interval);
+
+            const el = document.querySelector("#tabBlocker_overlay");
+            if (el) el.remove();
+
+            chrome.storage.local.remove(tabId.toString());
+            console.log("REMOVED TAB " + tabId + " FROM MEMORY");
+            return;
+        }
+
+        timerText.textContent = `Time remaining: ${Math.ceil(remaining / 1000)}s`;
+    }
+
+    // run immediately so no delay
+    updateTimer();
+
+    // update every second
+    const interval = setInterval(updateTimer, 1000);
 }
 
 chrome.runtime.onMessage.addListener( (message) => {
     //check action type
     if (message.action === "startTimer") {
-        //add page to memory
-        chrome.storage.local.set({[message.tabId.toString()]:
-                {duration: message.duration, tabId : message.tabId, startTime: message.startTime}});
-        console.log("ADDED TAB " + message.tabId + " TO MEMORY. duration:" + message.duration);
-        //add overlay to the page
-        startTimer(message.startTime, message.duration, message.tabId);
+        //add page to memory if not exists
+        chrome.storage.local.get(message.tabId.toString(), (data) => {
+            const tab = data[message.tabId.toString()];
+            if(!tab){
+                chrome.storage.local.set({[message.tabId.toString()]:
+                        {duration: message.duration, tabId : message.tabId, startTime: message.startTime}});
+                console.log("ADDED TAB " + message.tabId + " TO MEMORY. duration:" + message.duration);
+                //add overlay to the page
+                startTimer(message.startTime, message.duration, message.tabId);
+            }
+        })
     }
 
     if (message.action === "removeTab"){
