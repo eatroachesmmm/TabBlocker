@@ -36,9 +36,9 @@ function startTimer(startTime, duration, tabId) {
     overlay.id = "tabBlocker_overlay";
 
     overlay.innerHTML = `
-        <div class="overlay-content">
-            <h2>This tab has been blocked</h2>
-            <h1 id="timer_text"></h1>
+        <div class="tabBlocker_overlay-content">
+            <h1>This tab has been blocked</h1>
+            <h2 id="tabBlocker_overlay-timer"></h2>
         </div>
     `;
 
@@ -48,7 +48,7 @@ function startTimer(startTime, duration, tabId) {
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
 
-    const timerText = document.getElementById("timer_text");
+    const timerText = document.getElementById("tabBlocker_overlay-timer");
 
     function updateTimer() {
         let remaining = endTime - Date.now();

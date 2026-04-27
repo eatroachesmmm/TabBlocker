@@ -19,3 +19,11 @@
 
     z-index: 2147483647;
 }
+
+.tabBlocker_overlay-content > h1{
+    font-size: 100px;
+}
+
+#tabBlocker_overlay-timer{
+    font-size: 50px;
+}
