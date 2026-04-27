@@ -9,6 +9,20 @@ chrome.runtime.sendMessage({ action: "getTabId" }, (tabId) => {
     });
 });
 
+function removeOverlay(tabId){
+    const el = document.querySelector("#tabBlocker_overlay");
+    if (el) el.remove();
+
+    console.log("DISABLED OVERLAY");
+
+    chrome.storage.local.remove(tabId.toString());
+    console.log("REMOVED TAB " + tabId + " FROM MEMORY");
+
+    //enable scrolling
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+}
+
 function startTimer(startTime, duration, tabId) {
 
     let endTime = startTime + duration * 1000;
@@ -30,6 +44,10 @@ function startTimer(startTime, duration, tabId) {
 
     document.body.appendChild(overlay);
 
+    //disable scrolling
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
     const timerText = document.getElementById("timer_text");
 
     function updateTimer() {
@@ -41,8 +59,7 @@ function startTimer(startTime, duration, tabId) {
             const el = document.querySelector("#tabBlocker_overlay");
             if (el) el.remove();
 
-            chrome.storage.local.remove(tabId.toString());
-            console.log("REMOVED TAB " + tabId + " FROM MEMORY");
+            removeOverlay(tabId);
             return;
         }
 
@@ -74,10 +91,9 @@ chrome.runtime.onMessage.addListener( (message) => {
 
     if (message.action === "removeTab"){
         chrome.storage.local.get(message.tabId.toString(), (data) => {
-            if(data[message.tabId.toString()]){
-                document.body.removeChild(document.querySelector("#tabBlocker_overlay"));
-                chrome.storage.local.remove(message.tabId.toString());
-                console.log("REMOVED TAB " + message.tabId + " FROM MEMORY");
+            let tab = data[message.tabId.toString()];
+            if(tab){
+                removeOverlay(tab.tabId);
             }
         })
     }

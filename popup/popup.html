@@ -5,6 +5,11 @@
 </head>
 
 <body>
+    <div class="title_container">
+        <img src="/images/icon-32.png" alt="Tab Blocker Icon" class="icon">
+        <h1>Tab Blocker</h1>
+    </div>
+    <p>Set a timer using the fields below. Tab Blocker will temporarily block the current tab for the duration you choose. Each tab can have its own timer.</p>
     <div class="time_container">
         <input class="time_input" type="text" id="hours_input" placeholder="00" maxlength="2">
         <h3>:</h3>
@@ -12,8 +17,17 @@
         <h3>:</h3>
         <input class="time_input" type="text" id="seconds_input" placeholder="00" maxlength="2">
     </div>
-    <button id="start_button">Start</button>
-    <button id="reset_button">Reset</button>
+    <div class="button_container">
+        <button id="start_button">Start</button>
+        <button id="reset_button">Reset</button>
+    </div>
+    <h2 id="tabBlockerStatus"></h2>
+    <div class="footer">
+        <p>
+            made with love by
+            <a href="https://github.com/eatroachesmmm">eatroachesmmm</a>
+        </p>
+    </div>
     <script src="popup.js"></script>
 </body>
 
