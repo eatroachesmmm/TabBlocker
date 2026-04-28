@@ -12,5 +12,6 @@ To try this extension:
 3) Click "Load unpacked" and select the folder you extracted.
 
 I am planning to add more features to this extension in the future. Some of the planned features include:
+- FireFox support.
 - Blocking all tabs that match the entered domain.
 - Muting all sounds on the blocked tab.
