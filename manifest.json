@@ -35,7 +35,6 @@
     "service_worker": "scripts/background.js"
   },
   "permissions": [
-    "scripting",
     "activeTab",
     "storage"
   ]

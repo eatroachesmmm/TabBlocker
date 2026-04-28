@@ -13,10 +13,8 @@ function removeOverlay(tabId){
     const el = document.querySelector("#tabBlocker_overlay");
     if (el) el.remove();
 
-    console.log("DISABLED OVERLAY");
 
     chrome.storage.local.remove(tabId.toString());
-    console.log("REMOVED TAB " + tabId + " FROM MEMORY");
 
     //enable scrolling
     document.documentElement.style.overflow = "";
@@ -82,7 +80,6 @@ chrome.runtime.onMessage.addListener( (message) => {
             if(!tab){
                 chrome.storage.local.set({[message.tabId.toString()]:
                         {duration: message.duration, tabId : message.tabId, startTime: message.startTime}});
-                console.log("ADDED TAB " + message.tabId + " TO MEMORY. duration:" + message.duration);
                 //add overlay to the page
                 startTimer(message.startTime, message.duration, message.tabId);
             }
